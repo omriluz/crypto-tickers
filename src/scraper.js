@@ -15,27 +15,25 @@ const reddit = new Snoowrap({
 const CRYPTO_SUBREDDITS = [
   'CryptoMoonShots',
   'SatoshiStreetBets',
-  'CryptoMarkets',
-  'altcoin',
-  'CryptoCurrency'
+  'CryptoMarkets'
 ];
 
 const TICKER_REGEX = /\b[A-Z]{3,5}\b/g;
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-async function getTickerMentions(subreddit, timeFilter = 'day', limit = 10) {
+async function getTickerMentions(subreddit, timeFilter = 'day', limit = 5) {
   try {
     const posts = await reddit.getSubreddit(subreddit).getHot({limit: limit});
     const tickerCounts = {};
     
     for (const post of posts) {
-      await delay(4000);
+      await delay(2000);
       
       const titleTickers = post.title.match(TICKER_REGEX) || [];
       const contentTickers = post.selftext.match(TICKER_REGEX) || [];
       
       try {
-        const comments = await post.expandReplies({limit: Infinity, depth: 3});
+        const comments = await post.expandReplies({limit: 10, depth: 2});
         const commentTickers = [];
         
         function processComment(comment) {
@@ -62,8 +60,8 @@ async function getTickerMentions(subreddit, timeFilter = 'day', limit = 10) {
       } catch (commentError) {
         console.error(`Error processing comments for post in r/${subreddit}:`, commentError.message);
         if (commentError.message.includes('429')) {
-          console.log('Rate limit hit, waiting 30 seconds...');
-          await delay(30000);
+          console.log('Rate limit hit, waiting 15 seconds...');
+          await delay(15000);
         }
       }
     }
@@ -91,7 +89,7 @@ async function getAllSubredditsTickerMentions() {
       errors.push(`Error in r/${subreddit}: ${error.message}`);
     }
     
-    await delay(10000);
+    await delay(5000);
   }
   
   return { tickers: allTickerCounts, errors };

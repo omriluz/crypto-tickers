@@ -10,17 +10,27 @@ const PORT = process.env.PORT || 3001;
 // Serve static files
 app.use(express.static('public'));
 
-// Add update endpoint with optional API key protection
+// Add update endpoint with timeout handling
 app.get('/api/update', async (req, res) => {
   const apiKey = process.env.UPDATE_API_KEY;
   if (apiKey && req.query.key !== apiKey) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
+  // Set a timeout for the request
+  const timeout = setTimeout(() => {
+    res.status(504).json({ 
+      error: 'Update is still processing. Check back in a few minutes.',
+      status: 'processing'
+    });
+  }, 50000); // 50 seconds timeout
+
   try {
     const results = await saveResults();
+    clearTimeout(timeout);
     res.json({ success: true, updatedAt: results.updatedAt });
   } catch (error) {
+    clearTimeout(timeout);
     res.status(500).json({ error: error.message });
   }
 });
