@@ -1,0 +1,15 @@
+module.exports = [
+  'BTC',
+  'ETH',
+  'SOL',
+  'USDT',
+  'USDC',
+  'USD',
+  'THE',
+  'NFT',
+  'APE',
+  'AND',
+  'FOR',
+  'DOGE',
+  'MOON',
+]; 

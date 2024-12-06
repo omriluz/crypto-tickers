@@ -1,0 +1,49 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.updated-at {
+  color: #666;
+  font-style: italic;
+}
+
+.ticker-list {
+  margin-top: 20px;
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.rank {
+  width: 30px;
+  font-weight: bold;
+}
+
+.ticker {
+  flex: 1;
+  font-weight: bold;
+  color: #2a5;
+}
+
+.count {
+  color: #666;
+}
+
+.errors {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fff5f5;
+  border-radius: 5px;
+}
+
+.errors h2 {
+  color: #e53e3e;
+  margin-top: 0;
+} 
