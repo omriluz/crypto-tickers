@@ -1,0 +1,14 @@
+name: Update Crypto Mentions Data
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # Run every 4 hours
+  workflow_dispatch:  # Allow manual triggers
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger update endpoint
+        run: |
+          curl -X GET "${{ secrets.VERCEL_URL }}/api/update?key=${{ secrets.UPDATE_API_KEY }}" 

@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs-extra');
-const { startCronJob } = require('./cronJob');
 const { saveResults } = require('./scraper');
 const blacklist = require('../config/blacklist');
 
@@ -10,6 +9,21 @@ const PORT = process.env.PORT || 3001;
 
 // Serve static files
 app.use(express.static('public'));
+
+// Add update endpoint with optional API key protection
+app.get('/api/update', async (req, res) => {
+  const apiKey = process.env.UPDATE_API_KEY;
+  if (apiKey && req.query.key !== apiKey) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const results = await saveResults();
+    res.json({ success: true, updatedAt: results.updatedAt });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.get('/', async (req, res) => {
   try {
@@ -78,5 +92,4 @@ app.get('/', async (req, res) => {
 // Start the server and cron job
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  startCronJob();
 }); 
